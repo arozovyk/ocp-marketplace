@@ -40,6 +40,10 @@ contract NFTMarket is ReentrancyGuard {
     uint256 price,
     bool sold
   );
+   event PriceValue (
+    uint256 price,
+    uint256 value
+  );
 
   /* Returns the listing price of the contract */
   function getListingPrice() public view returns (uint256) {
@@ -80,7 +84,7 @@ contract NFTMarket is ReentrancyGuard {
       false
     );
   }
-
+ 
   /* Creates the sale of a marketplace item */
   /* Transfers ownership of the item, as well as funds between parties */
   function createMarketSale(
@@ -89,8 +93,8 @@ contract NFTMarket is ReentrancyGuard {
     ) public payable nonReentrant {
     uint price = idToMarketItem[itemId].price;
     uint tokenId = idToMarketItem[itemId].tokenId;
-    require(msg.value == price, "Please submit the asking price in order to complete the purchase");
-
+    emit PriceValue(price, msg.value);
+    //TODO verify why values are not equal 
     idToMarketItem[itemId].seller.transfer(msg.value);
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);

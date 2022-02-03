@@ -20,6 +20,7 @@ export class CreateMarketplaceItem extends React.Component {
       nft_name: null,
       nft_asset: null,
       nft_description: null,
+      price: 0,
       selectedAccount: null,
       uploadedFile: null,
       ipfs_path: null,
@@ -68,8 +69,8 @@ export class CreateMarketplaceItem extends React.Component {
         mint(metadata_res.path).then((res) => {
           let newID = res.events.Transfer.returnValues[2];
           console.log("Minted an nft with id : " + newID);
-          createMarketItem(newID, 666);
-          console.log("Created market for : " + newID + " costing : " + 666);
+          createMarketItem(newID,  this.state.price);
+          console.log("Created market for : " + newID + " costing : " + this.state.price);
 
           this.updateNftBalance();
         });
@@ -108,6 +109,17 @@ export class CreateMarketplaceItem extends React.Component {
             </p>
             <p>
               <label>
+                Price:
+                <input
+                  type="number"
+                  required
+                  name="price"
+                  onChange={this.handleInputChange}
+                />
+              </label>
+            </p>
+            <p>
+              <label>
                 File to mint:
                 <input
                   type="file"
@@ -117,6 +129,7 @@ export class CreateMarketplaceItem extends React.Component {
                 />
               </label>
             </p>
+
             <div>
               <Button
                 color="violet"

@@ -1,36 +1,41 @@
 import React from "react";
 import { Panel } from "rsuite";
-import Gallery from 'react-grid-gallery';
+import Carousel from "react-grid-carousel";
 
 import { getTokenUri, fetchMarketItems, weiToEther } from "./Web3Client";
 
+const IMAGES = [
+  {
+    src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
+    thumbnail:
+      "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg",
+    thumbnailWidth: 320,
+    thumbnailHeight: 174,
+    isSelected: true,
+    caption: "After Rain (Jeshu John - designerspics.com)",
+  },
+  {
+    src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
+    thumbnail:
+      "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_n.jpg",
+    thumbnailWidth: 320,
+    thumbnailHeight: 212,
+    tags: [
+      { value: "Ocean", title: "Ocean" },
+      { value: "People", title: "People" },
+    ],
+    caption: "Boats (Jeshu John - designerspics.com)",
+  },
 
-const IMAGES =
-[{
-        src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-        thumbnail: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg",
-        thumbnailWidth: 320,
-        thumbnailHeight: 174,
-        isSelected: true,
-        caption: "After Rain (Jeshu John - designerspics.com)"
-},
-{
-        src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-        thumbnail: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_n.jpg",
-        thumbnailWidth: 320,
-        thumbnailHeight: 212,
-        tags: [{value: "Ocean", title: "Ocean"}, {value: "People", title: "People"}],
-        caption: "Boats (Jeshu John - designerspics.com)"
-},
- 
-{
-        src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-        thumbnail: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_n.jpg",
-        thumbnailWidth: 320,
-        thumbnailHeight: 212,
-        thumbnailCaption: "test"
-}]
-
+  {
+    src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
+    thumbnail:
+      "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_n.jpg",
+    thumbnailWidth: 320,
+    thumbnailHeight: 212,
+    thumbnailCaption: "test",
+  },
+];
 
 export class DisplayMarketItems extends React.Component {
   constructor(props) {
@@ -41,13 +46,24 @@ export class DisplayMarketItems extends React.Component {
       tokenUri: null,
       tokenOwner: null,
       marketItems: null,
+      marketGalery: null,
     };
   }
 
-
-  componentDidMount(){
-    this.itemsSetUp().then();
-
+  componentDidMount() {
+    this.itemsSetUp().then(() => {
+      let items = this.state.marketItems.map((nft) => {
+        let i = {
+          src: nft.image,
+          thumbnail: nft.image,
+          thumbnailWidth: 320,
+          thumbnailHeight: 212,
+          caption: "<p>" + nft.name + "</p><p>" + nft.description + "</p>",
+        };
+        return i;
+      });
+      this.setState({ marketGalery: items });
+    });
   }
 
   getJsonAsync(url) {
@@ -62,7 +78,7 @@ export class DisplayMarketItems extends React.Component {
   }
 
   itemsSetUp = async () => {
-     let data = await fetchMarketItems();
+    let data = await fetchMarketItems();
     const items = await Promise.all(
       data.map(async (i) => {
         const tokenUri = await getTokenUri(i.tokenId);
@@ -77,15 +93,11 @@ export class DisplayMarketItems extends React.Component {
           name: meta.name,
           description: meta.description,
         };
-        console.log(item)
         return item;
       })
     );
     this.setState({ marketItems: items });
   };
-  componentDidMount() {
-    this.itemsSetUp()
-  }
 
   handleInputChange = (event) => {
     //TODO export it from upstream to remove code duplication
@@ -101,32 +113,24 @@ export class DisplayMarketItems extends React.Component {
     return (
       <Panel header="NFTs on sale:" bordered>
         <div>
-          {this.state.marketItems != null
-            ? this.state.marketItems.map((nft, i) => (
-                <div key={i}>
-                 <img
-                src={nft.image}
-                width="300px"
-                height="300px"
-                alt="new"
-              />
-                  <div>
-                    <p>{nft.name}</p>
-                    <div>
-                      <p>{nft.description}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <p>{nft.price} AVAX</p>
-                    <button>Buy</button>
-                  </div>
-                </div>
-              ))
-            : ""}
+          {this.state.marketItems != null ? (
+            <Carousel cols={2} rows={1} gap={3} loop>
+              
+              {this.state.marketItems.map((nft, i) => (
+                <Carousel.Item key={i}>
+                  <img src={nft.image} width="50%" />
+                  <p>Name : {nft.name}</p>
+                  <p>Description : {nft.description}</p>
+                  <p>Price : {nft.price} AVAX</p>
+                  <p><button>Buy</button></p>
+                </Carousel.Item>
+              ))}
+            </Carousel>
+          ) : (
+            ""
+          )}
         </div>
-         
       </Panel>
-      
     );
   }
 }
@@ -173,4 +177,21 @@ export class DisplayMarketItems extends React.Component {
             </p>
           </div>
         )}
+
+
+        <Carousel cols={2} rows={1} gap={10} loop>
+            <Carousel.Item>
+              <img width="100%" src="https://picsum.photos/800/600?random=1" />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img width="100%" src="https://picsum.photos/800/600?random=2" />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img width="100%" src="https://picsum.photos/800/600?random=3" />
+              <p>Lol</p>
+            </Carousel.Item>
+           
+          </Carousel>
+
+
         */

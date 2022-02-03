@@ -42,7 +42,12 @@ export class DisplayMarketItems extends React.Component {
       tokenOwner: null,
       marketItems: null,
     };
-    this.itemsSetUp();
+  }
+
+
+  componentDidMount(){
+    this.itemsSetUp().then();
+
   }
 
   getJsonAsync(url) {
@@ -57,7 +62,7 @@ export class DisplayMarketItems extends React.Component {
   }
 
   itemsSetUp = async () => {
-    let data = await fetchMarketItems();
+     let data = await fetchMarketItems();
     const items = await Promise.all(
       data.map(async (i) => {
         const tokenUri = await getTokenUri(i.tokenId);
@@ -78,7 +83,9 @@ export class DisplayMarketItems extends React.Component {
     );
     this.setState({ marketItems: items });
   };
-  componentDidMount() {}
+  componentDidMount() {
+    this.itemsSetUp()
+  }
 
   handleInputChange = (event) => {
     //TODO export it from upstream to remove code duplication
@@ -117,7 +124,7 @@ export class DisplayMarketItems extends React.Component {
               ))
             : ""}
         </div>
-        
+         
       </Panel>
       
     );

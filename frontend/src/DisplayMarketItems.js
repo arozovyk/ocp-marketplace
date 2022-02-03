@@ -87,7 +87,7 @@ export class DisplayMarketItems extends React.Component {
               
               {this.state.marketItems.map((nft, i) => (
                 <Carousel.Item key={i}>
-                  <img src={nft.image} width="50%" />
+                  <img src={nft.image} width="50%" alt=""/>
                   <p>Name : {nft.name}</p>
                   <p>Description : {nft.description}</p>
                   <p>Price : {nft.price} AVAX</p>

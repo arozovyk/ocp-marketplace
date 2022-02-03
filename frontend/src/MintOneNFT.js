@@ -34,7 +34,7 @@ export class MintOneNFT extends React.Component {
       .then((acc) => {
         this.setState({ selectedAccount: acc });
       })
-      .then( );
+      .then(() => this.updateNftBalance());
   }
 
   changeHandler = (event) => {

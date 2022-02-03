@@ -2,7 +2,13 @@ import React from "react";
 import { Panel } from "rsuite";
 import Carousel from "react-grid-carousel";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { getTokenUri, weiToEther, buyNft, fetchMyNFTs } from "./Web3Client";
+import {
+  getTokenUri,
+  weiToEther,
+  buyNft,
+  fetchMyNFTs,
+  getSelectedAccount,
+} from "./Web3Client";
 
 const APIURL =
   "https://api.thegraph.com/subgraphs/name/arozovyk/nftmarketplace";
@@ -49,14 +55,9 @@ export class DiplayMyNFTS extends React.Component {
       });
       this.setState({ marketGalery: items });
     });
-    client
-      .query({
-        query: gql(tokensQuery),
-      })
-      .then((data) => console.log("Subgraph data: ", data))
-      .catch((err) => {
-        console.log("Error fetching data: ", err);
-      });
+    client.query({
+      query: gql(tokensQuery),
+    });
   }
 
   getJsonAsync(url) {
@@ -71,17 +72,25 @@ export class DiplayMyNFTS extends React.Component {
   }
 
   itemsSetUp = async () => {
+    let data2 = await client.query({
+      query: gql(tokensQuery),
+    });
+    let selectedAddr = await getSelectedAccount();
+    var userTokens = data2.data.users.filter((user) => {
+      console.log(user.id+ "is id ");
+      console.log(selectedAddr+ "is selected ");
+      return user.id == selectedAddr;
+    })[0].tokens;
+    console.log(userTokens, "data 2");
+
     let data = await fetchMyNFTs();
     const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await getTokenUri(i.tokenId);
+      userTokens.map(async (i) => {
+        const tokenUri = i.contentURI;
         const meta = await this.getJsonAsync(tokenUri);
-        let price = await weiToEther(i.price.toString());
         let item = {
-          price,
-          tokenId: i.tokenId,
-          seller: i.seller,
-          owner: i.owner,
+          tokenId: i.id,
+          owner: selectedAddr,
           image: meta.image,
           name: meta.name,
           description: meta.description,
@@ -122,8 +131,7 @@ export class DiplayMyNFTS extends React.Component {
                   <p>Name : {nft.name}</p>
                   <p>Description : {nft.description}</p>
                   <p>tokenId : {nft.tokenId}</p>
-                  <p>Price : {nft.price} AVAX</p>
-                </Carousel.Item>
+                 </Carousel.Item>
               ))}
             </Carousel>
           ) : (

@@ -1,15 +1,28 @@
 import React from "react";
 import { Panel } from "rsuite";
 import Carousel from "react-grid-carousel";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import { getTokenUri, weiToEther, buyNft, fetchMyNFTs } from "./Web3Client";
 
-import {
-  getTokenUri,
-  fetchMarketItems,
-  weiToEther,
-  buyNft,
-} from "./Web3Client";
+const APIURL =
+  "https://api.thegraph.com/subgraphs/name/arozovyk/nftmarketplace";
 
-export class DisplayMarketItems extends React.Component {
+const tokensQuery = `
+  query {
+    users {
+      id
+      tokens {
+        id
+        contentURI
+      }
+    }
+  }
+`;
+const client = new ApolloClient({
+  uri: APIURL,
+  cache: new InMemoryCache(),
+});
+export class DiplayMyNFTS extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,6 +49,14 @@ export class DisplayMarketItems extends React.Component {
       });
       this.setState({ marketGalery: items });
     });
+    client
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => console.log("Subgraph data: ", data))
+      .catch((err) => {
+        console.log("Error fetching data: ", err);
+      });
   }
 
   getJsonAsync(url) {
@@ -50,7 +71,7 @@ export class DisplayMarketItems extends React.Component {
   }
 
   itemsSetUp = async () => {
-    let data = await fetchMarketItems();
+    let data = await fetchMyNFTs();
     const items = await Promise.all(
       data.map(async (i) => {
         const tokenUri = await getTokenUri(i.tokenId);
@@ -84,14 +105,14 @@ export class DisplayMarketItems extends React.Component {
   handleSubmit(event) {
     let id = event.target[0].value;
     let price = event.target[1].value;
-    console.log("price in submit"+price)
+    console.log("price in submit" + price);
     buyNft(id, price);
     event.preventDefault();
   }
 
   render() {
     return (
-      <Panel header="NFTs on sale:" bordered>
+      <Panel header="My NFTs:" bordered>
         <div>
           {this.state.marketItems != null ? (
             <Carousel cols={4} rows={1} gap={0} loop>
@@ -102,11 +123,6 @@ export class DisplayMarketItems extends React.Component {
                   <p>Description : {nft.description}</p>
                   <p>tokenId : {nft.tokenId}</p>
                   <p>Price : {nft.price} AVAX</p>
-                  <form onSubmit={this.handleSubmit}>
-                    <input type="hidden" name="tokenID" value={nft.tokenId} />
-                    <input type="hidden"  name="price" value={nft.price}  />
-                    <input type="submit" value="Buy" />
-                  </form>
                 </Carousel.Item>
               ))}
             </Carousel>

@@ -44,8 +44,8 @@ export const getSelectedAccount = async () => {
   return selectedAccount;
 };
 export const getSelectedAccountsNftBalance = async () => {
-  console.log(nftContract+ "iS THE CONTRACT NFT ")
-  console.log(selectedAccount+ "iS THE selected account  ")
+  console.log(nftContract + "iS THE CONTRACT NFT ");
+  console.log(selectedAccount + "iS THE selected account  ");
   return await nftContract.methods.balanceOf(selectedAccount).call();
 };
 
@@ -68,11 +68,23 @@ export const getOwnerOf = async (tokenId) => {
   return await nftContract.methods.ownerOf(tokenId).call();
 };
 
-export const createMarketItem = async (tokenId, price) => {
+export const createMarketItem = async (tokenId, p) => {
+  let price = await web3.utils.toWei(p);
   return await marketContract.methods
     .createMarketItem(NFT_ADDR, tokenId, price)
     .send({ from: selectedAccount, value: 25000000000000000 });
 };
+
+export const buyNft = async (tokenId, price) => {
+  let value = await web3.utils.toWei(price);
+  return await marketContract.methods
+    .createMarketSale(NFT_ADDR, tokenId)
+    .send({ from: selectedAccount, value  });
+};
+
 export const fetchMarketItems = async () => {
   return await marketContract.methods.fetchMarketItems().call();
+};
+export const fetchMyNFTs = async () => {
+  return await marketContract.methods.fetchItemsCreated().call();
 };

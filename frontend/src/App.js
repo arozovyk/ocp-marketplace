@@ -4,6 +4,7 @@ import { DisplayOneNFT } from "./DiplayOneNFT";
 import { MintOneNFT } from "./MintOneNFT";
 import { CreateMarketplaceItem } from "./CreateMarketplaceItem";
 import { DisplayMarketItems } from "./DisplayMarketItems";
+import { DiplayMyNFTS } from "./DiplayMyNFTS";
 
 import "rsuite/dist/rsuite.min.css";
 
@@ -21,11 +22,12 @@ class App extends React.Component {
     return (
       <div className="App">
         <div style={styles}>
+          <DiplayMyNFTS />
           <MintOneNFT />
           <DisplayOneNFT />
           <CreateMarketplaceItem />
           <DisplayMarketItems />
-        </div>
+         </div>
       </div>
     );
   }

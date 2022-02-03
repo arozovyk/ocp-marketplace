@@ -113,6 +113,7 @@ export class CreateMarketplaceItem extends React.Component {
                 <input
                   type="number"
                   required
+                  step="0.000001"
                   name="price"
                   onChange={this.handleInputChange}
                 />

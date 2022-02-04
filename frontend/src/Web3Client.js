@@ -79,7 +79,10 @@ export const buyNft = async (tokenId, price) => {
   let value = await web3.utils.toWei(price);
   return await marketContract.methods
     .createMarketSale(NFT_ADDR, tokenId)
-    .send({ from: selectedAccount, value  });
+    .send({ from: selectedAccount, value });
+};
+export const sellNft = async (tokenId, price) => {
+  return await createMarketItem(tokenId, price);
 };
 
 export const fetchMarketItems = async () => {

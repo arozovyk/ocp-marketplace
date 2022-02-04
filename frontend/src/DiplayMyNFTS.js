@@ -2,13 +2,7 @@ import React from "react";
 import { Panel } from "rsuite";
 import Carousel from "react-grid-carousel";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import {
-  getTokenUri,
-  weiToEther,
-  buyNft,
-  fetchMyNFTs,
-  getSelectedAccount,
-} from "./Web3Client";
+import { sellNft, getSelectedAccount } from "./Web3Client";
 
 const APIURL =
   "https://api.thegraph.com/subgraphs/name/arozovyk/nftmarketplace";
@@ -77,13 +71,12 @@ export class DiplayMyNFTS extends React.Component {
     });
     let selectedAddr = await getSelectedAccount();
     var userTokens = data2.data.users.filter((user) => {
-      console.log(user.id+ "is id ");
-      console.log(selectedAddr+ "is selected ");
-      return user.id == selectedAddr;
+      console.log(user.id + "is id ");
+      console.log(selectedAddr + "is selected ");
+      return user.id === selectedAddr;
     })[0].tokens;
     console.log(userTokens, "data 2");
 
-    let data = await fetchMyNFTs();
     const items = await Promise.all(
       userTokens.map(async (i) => {
         const tokenUri = i.contentURI;
@@ -115,7 +108,7 @@ export class DiplayMyNFTS extends React.Component {
     let id = event.target[0].value;
     let price = event.target[1].value;
     console.log("price in submit" + price);
-    buyNft(id, price);
+    sellNft(id, price)
     event.preventDefault();
   }
 
@@ -131,7 +124,17 @@ export class DiplayMyNFTS extends React.Component {
                   <p>Name : {nft.name}</p>
                   <p>Description : {nft.description}</p>
                   <p>tokenId : {nft.tokenId}</p>
-                 </Carousel.Item>
+                  <form onSubmit={this.handleSubmit}>
+                    <input type="hidden" name="tokenID" value={nft.tokenId} />
+                    <input
+                      type="number"
+                      step="0.1"
+                      name="price"
+                      value={nft.price}
+                    />
+                    <input type="submit" value="Sell" />
+                  </form>
+                </Carousel.Item>
               ))}
             </Carousel>
           ) : (

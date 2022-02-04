@@ -2,7 +2,7 @@ import React from "react";
 import { Panel } from "rsuite";
 import Carousel from "react-grid-carousel";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { sellNft, getSelectedAccount } from "./Web3Client";
+import { createMarketItem, getSelectedAccount } from "./Web3Client";
 
 const APIURL =
   "https://api.thegraph.com/subgraphs/name/arozovyk/nftmarketplace";
@@ -26,10 +26,6 @@ export class DiplayMyNFTS extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tokenId: null,
-      tokenMetadata: null,
-      tokenUri: null,
-      tokenOwner: null,
       marketItems: null,
       marketGalery: null,
     };
@@ -70,12 +66,12 @@ export class DiplayMyNFTS extends React.Component {
       query: gql(tokensQuery),
     });
     let selectedAddr = await getSelectedAccount();
-    var userTokens = data2.data.users.filter((user) => {
+    var user = data2.data.users.filter((user) => {
       console.log(user.id + "is id ");
       console.log(selectedAddr + "is selected ");
       return user.id === selectedAddr;
-    })[0].tokens;
-    console.log(userTokens, "data 2");
+    })[0];
+    let userTokens = user === undefined ? [] : user.tokens;
 
     const items = await Promise.all(
       userTokens.map(async (i) => {
@@ -107,18 +103,18 @@ export class DiplayMyNFTS extends React.Component {
   handleSubmit(event) {
     let id = event.target[0].value;
     let price = event.target[1].value;
-    console.log("price in submit" + price);
-    sellNft(id, price)
+    createMarketItem(id, price);
     event.preventDefault();
   }
 
   render() {
+    const nfts = this.props.myNfts;
     return (
       <Panel header="My NFTs:" bordered>
         <div>
-          {this.state.marketItems != null ? (
+          {nfts != null ? (
             <Carousel cols={4} rows={1} gap={0} loop>
-              {this.state.marketItems.map((nft, i) => (
+              {nfts.map((nft, i) => (
                 <Carousel.Item key={i}>
                   <img src={nft.image} width="50%" alt="" />
                   <p>Name : {nft.name}</p>
@@ -188,8 +184,6 @@ export class DiplayMyNFTS extends React.Component {
             </p>
           </div>
         )}
-
-
         <Carousel cols={2} rows={1} gap={10} loop>
             <Carousel.Item>
               <img width="100%" src="https://picsum.photos/800/600?random=1" />
@@ -201,8 +195,5 @@ export class DiplayMyNFTS extends React.Component {
               <img width="100%" src="https://picsum.photos/800/600?random=3" />
               <p>Lol</p>
             </Carousel.Item>
-           
           </Carousel>
-
-
         */

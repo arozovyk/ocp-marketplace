@@ -81,9 +81,6 @@ export const buyNft = async (tokenId, price) => {
     .createMarketSale(NFT_ADDR, tokenId)
     .send({ from: selectedAccount, value });
 };
-export const sellNft = async (tokenId, price) => {
-  return await createMarketItem(tokenId, price);
-};
 
 export const fetchMarketItems = async () => {
   return await marketContract.methods.fetchMarketItems().call();

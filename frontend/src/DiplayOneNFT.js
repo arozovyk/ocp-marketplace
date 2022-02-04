@@ -56,7 +56,7 @@ export class DisplayOneNFT extends React.Component {
 
   render() {
     return (
-      <Panel header="Display owned NFT" bordered>
+      <Panel header="Display NFT by TokenId" bordered>
         <div>
           <form onSubmit={this.findByTokenId}>
             <p>

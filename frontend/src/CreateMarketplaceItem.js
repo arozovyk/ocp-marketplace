@@ -68,9 +68,7 @@ export class CreateMarketplaceItem extends React.Component {
         this.setState({ ipfs_path: metadata_res.path });
         mint(metadata_res.path).then((res) => {
           let newID = res.events.Transfer.returnValues[2];
-          console.log("Minted an nft with id : " + newID);
           createMarketItem(newID,  this.state.price);
-          console.log("Created market for : " + newID + " costing : " + this.state.price);
 
           this.updateNftBalance();
         });

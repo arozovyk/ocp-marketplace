@@ -38,7 +38,6 @@ export class DisplayOneNFT extends React.Component {
 
   findByTokenId = (event) => {
     getTokenUri(this.state.tokenId).then((res) => {
-      console.log("Blockchain call returned : " + res);
       this.getJsonAsync(res).then((jm) =>
         this.setState({
           tokenMetadata: JSON.stringify(jm),

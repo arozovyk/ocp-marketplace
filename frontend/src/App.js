@@ -68,7 +68,6 @@ class App extends React.Component {
         return item;
       })
     );
-      console.log("this is items", items)
     this.setState({ myNfts: items });
     return;
   };
@@ -90,13 +89,9 @@ class App extends React.Component {
  
 
   componentDidMount() {
-    this.interval = setInterval(() => this.fetchNftGraph(), 5000);
+    this.fetchNftGraph()
   }
   
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
   render() {
     return (
       <div className="App">

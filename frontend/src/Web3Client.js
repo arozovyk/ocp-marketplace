@@ -44,8 +44,6 @@ export const getSelectedAccount = async () => {
   return selectedAccount;
 };
 export const getSelectedAccountsNftBalance = async () => {
-  console.log(nftContract + "iS THE CONTRACT NFT ");
-  console.log(selectedAccount + "iS THE selected account  ");
   return await nftContract.methods.balanceOf(selectedAccount).call();
 };
 

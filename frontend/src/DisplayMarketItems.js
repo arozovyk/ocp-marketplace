@@ -59,6 +59,7 @@ export class DisplayMarketItems extends React.Component {
         let item = {
           price,
           tokenId: i.tokenId,
+          itemId: i.itemId,
           seller: i.seller,
           owner: i.owner,
           image: meta.image,
@@ -84,7 +85,6 @@ export class DisplayMarketItems extends React.Component {
   handleSubmit(event) {
     let id = event.target[0].value;
     let price = event.target[1].value;
-    console.log("price in submit"+price)
     buyNft(id, price);
     event.preventDefault();
   }
@@ -101,9 +101,10 @@ export class DisplayMarketItems extends React.Component {
                   <p>Name : {nft.name}</p>
                   <p>Description : {nft.description}</p>
                   <p>tokenId : {nft.tokenId}</p>
+                  <p>itemId : {nft.itemId}</p>
                   <p>Price : {nft.price} AVAX</p>
                   <form onSubmit={this.handleSubmit}>
-                    <input type="hidden" name="tokenID" value={nft.tokenId} />
+                    <input type="hidden" name="itemId" value={nft.itemId} />
                     <input type="hidden"  name="price" value={nft.price}  />
                     <input type="submit" value="Buy" />
                   </form>

@@ -12,7 +12,7 @@ contract NFT is ERC721URIStorage {
     Counters.Counter private _tokenIds;
     address contractAddress;
 
-    constructor(address marketplaceAddress) ERC721("OCamlProToken", "OCP") {
+    constructor(address marketplaceAddress) ERC721("OCPToken", "OCPNFT") {
         contractAddress = marketplaceAddress;
     }
 

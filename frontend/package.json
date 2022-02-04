@@ -1,54 +1,57 @@
 {
-	"name": "web3-tutorial",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"@apollo/client": "^3.5.8",
-		"@testing-library/jest-dom": "^5.14.1",
-		"@testing-library/react": "^11.2.7",
-		"@testing-library/user-event": "^12.8.3",
-		"ag-grid-community": "^26.0.0",
-		"ag-grid-react": "^26.0.0",
-		"graphql": "^16.3.0",
-		"ipfs-http-client": "^55.0.0",
-		"json-loader": "^0.5.7",
-		"react": "^17.0.2",
-		"react-dom": "^17.0.2",
-		"react-grid-carousel": "^1.0.1",
-		"react-grid-gallery": "^0.5.5",
-		"react-scripts": "4.0.3",
-		"rsuite": "^5.3.0",
-		"web-vitals": "^1.1.2",
-		"web3": "^1.5.2"
-	},
-	"scripts": {
-		"start": "PORT=3006 react-scripts start",
-		"build": "react-scripts build",
-		"migrate": "cd truffle && truffle compile && npx truffle migrate --network development",
-		"test": "cd gas-test && node dist/app.js",
-		"test-build": "cd gas-test && npx tsc",
-		"eject": "react-scripts eject"
-	},
-	"eslintConfig": {
-		"extends": [
-			"react-app",
-			"react-app/jest"
-		]
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
-	},
-	"devDependencies": {
-		"@graphprotocol/graph-ts": "^0.24.1",
-		"react-error-overlay": "^6.0.9"
-	}
+  "name": "web3-tutorial",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://arozovyk.github.io/marketplace-site",
+  "dependencies": {
+    "@apollo/client": "^3.5.8",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "ag-grid-community": "^26.0.0",
+    "ag-grid-react": "^26.0.0",
+    "graphql": "^16.3.0",
+    "ipfs-http-client": "^55.0.0",
+    "json-loader": "^0.5.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-grid-carousel": "^1.0.1",
+    "react-grid-gallery": "^0.5.5",
+    "react-scripts": "4.0.3",
+    "rsuite": "^5.3.0",
+    "web-vitals": "^1.1.2",
+    "web3": "^1.5.2"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "PORT=3006 react-scripts start",
+    "build": "react-scripts build",
+    "migrate": "cd truffle && truffle compile && npx truffle migrate --network development",
+    "test": "cd gas-test && node dist/app.js",
+    "test-build": "cd gas-test && npx tsc",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-ts": "^0.24.1",
+    "react-error-overlay": "^6.0.9"
+  }
 }

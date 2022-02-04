@@ -8,7 +8,7 @@ import {
   getSelectedAccount,
   getSelectedAccountsNftBalance,
 } from "./Web3Client";
-const ipfs = create("https://ipfs.infura.io:5001");
+const ipfs = create({ host: "ipfs.infura.io", port: 5001, protocol: "https" });
 
 export class MintOneNFT extends React.Component {
   constructor(props) {
@@ -61,7 +61,6 @@ export class MintOneNFT extends React.Component {
       ipfs.add(JSON.stringify(json)).then((metadata_res) => {
         this.setState({ ipfs_path: metadata_res.path });
         mint(metadata_res.path).then((res) => {
-         
           this.updateNftBalance();
         });
       });

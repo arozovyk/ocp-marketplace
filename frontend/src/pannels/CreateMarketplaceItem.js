@@ -3,39 +3,32 @@ import { Panel } from "rsuite";
 import { Button } from "rsuite";
 import { create } from "ipfs-http-client";
 
-import {
-  mint,
-  getSelectedAccount,
-  getSelectedAccountsNftBalance,
-} from "./Web3Client";
-const ipfs = create({ host: "ipfs.infura.io", port: 5001, protocol: "https" });
+import { mint, init, getSelectedAccount, createMarketItem } from "../Web3Client";
 
-export class MintOneNFT extends React.Component {
+const ipfs = create("http://ipfs.infura.io:5001");
+
+export class CreateMarketplaceItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       nft_name: null,
       nft_asset: null,
       nft_description: null,
+      price: 0,
       selectedAccount: null,
-      uploadedFile: null,
-      ipfs_path: null,
-
-      selectedAccountsNftBalance: 0,
     };
   }
-  updateNftBalance = () => {
-    getSelectedAccountsNftBalance().then((balance) => {
-      this.setState({ selectedAccountsNftBalance: parseInt(balance) });
-    });
-  };
 
   componentDidMount() {
-    getSelectedAccount()
-      .then((acc) => {
-        this.setState({ selectedAccount: acc });
+    init()
+      .then(() => {
+        getSelectedAccount()
+          .then((acc) => {
+            this.setState({ selectedAccount: acc });
+          })
+          .then(() => {});
       })
-      .then(() => this.updateNftBalance());
+      .catch(() => console.log("Failed to initialize."));
   }
 
   changeHandler = (event) => {
@@ -51,7 +44,7 @@ export class MintOneNFT extends React.Component {
     });
   };
 
-  handleSubmit = (event) => {
+  createItem = (event) => {
     ipfs.add(this.state.nft_asset).then((asset_res) => {
       var json = {
         name: this.state.nft_name,
@@ -61,26 +54,20 @@ export class MintOneNFT extends React.Component {
       ipfs.add(JSON.stringify(json)).then((metadata_res) => {
         this.setState({ ipfs_path: metadata_res.path });
         mint(metadata_res.path).then((res) => {
-          this.updateNftBalance();
+          let newID = res.events.Transfer.returnValues[2];
+          createMarketItem(newID, this.state.price);
         });
       });
     });
-
     event.preventDefault();
   };
 
   render() {
     return (
-      <Panel header="Mint a new NFT" bordered>
+      <Panel header="Create marketplace item" bordered collapsible>
         <p>Current connected account :{this.state.selectedAccount} </p>
-        <p>
-          Current accounts nft balance :{this.state.selectedAccountsNftBalance}
-        </p>
-        <p>Last ipfs path :{this.state.ipfs_path} </p>
-        <p>Last token id :{this.state.lastTokenId} </p>
-
         <div>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.createItem}>
             <p>
               <label>Name:</label>
               <input
@@ -103,6 +90,18 @@ export class MintOneNFT extends React.Component {
             </p>
             <p>
               <label>
+                Price:
+                <input
+                  type="number"
+                  required
+                  step="0.000001"
+                  name="price"
+                  onChange={this.handleInputChange}
+                />
+              </label>
+            </p>
+            <p>
+              <label>
                 File to mint:
                 <input
                   type="file"
@@ -119,7 +118,7 @@ export class MintOneNFT extends React.Component {
                 type="submit"
                 value="Mint NFT"
               >
-                Mint
+                Create Market
               </Button>
             </div>
           </form>

@@ -1,13 +1,13 @@
 import React from "react";
 import { Panel } from "rsuite";
 import Carousel from "react-grid-carousel";
-
+import {getJsonAsync} from "../utils"
 import {
   getTokenUri,
   fetchMarketItems,
   weiToEther,
   buyNft,
-} from "./Web3Client";
+} from "../Web3Client";
 
 export class DisplayMarketItems extends React.Component {
   constructor(props) {
@@ -23,38 +23,17 @@ export class DisplayMarketItems extends React.Component {
   }
 
   componentDidMount() {
-    this.itemsSetUp().then(() => {
-      let items = this.state.marketItems.map((nft) => {
-        let i = {
-          src: nft.image,
-          thumbnail: nft.image,
-          thumbnailWidth: 320,
-          thumbnailHeight: 212,
-          caption: "<p>" + nft.name + "</p><p>" + nft.description + "</p>",
-        };
-        return i;
-      });
-      this.setState({ marketGalery: items });
-    });
+    this.itemsSetUp().then(() => {});
   }
 
-  getJsonAsync(url) {
-    return fetch(url)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        return responseJson;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+  
 
   itemsSetUp = async () => {
     let data = await fetchMarketItems();
     const items = await Promise.all(
       data.map(async (i) => {
         const tokenUri = await getTokenUri(i.tokenId);
-        const meta = await this.getJsonAsync(tokenUri);
+        const meta = await getJsonAsync(tokenUri);
         let price = await weiToEther(i.price.toString());
         let item = {
           price,
@@ -119,64 +98,3 @@ export class DisplayMarketItems extends React.Component {
     );
   }
 }
-
-/*
-<div>
-          <form onSubmit={this.findByTokenId}>
-            <p>
-              <label>
-                Token id:
-                <input
-                  type="text"
-                  required
-                  name="tokenId"
-                  onChange={this.handleInputChange}
-                />
-              </label>
-            </p>
-            <Button
-              color="red"
-              appearance="primary"
-              type="submit"
-              value="Mint NFT"
-            >
-              Find
-            </Button>
-          </form>
-        </div>
-        {this.state.tokenMetadata == null ? (
-          ""
-        ) : (
-          <div>
-            <p style={{ color: "green" }}>
-              NFT metadata : {this.state.tokenMetadata}
-            </p>
-            <p>Owner : {this.state.tokenOwner}</p>
-            <p>
-              <img
-                src={this.state.tokenUri}
-                width="300px"
-                height="300px"
-                alt="new"
-              />
-            </p>
-          </div>
-        )}
-
-
-        <Carousel cols={2} rows={1} gap={10} loop>
-            <Carousel.Item>
-              <img width="100%" src="https://picsum.photos/800/600?random=1" />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img width="100%" src="https://picsum.photos/800/600?random=2" />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img width="100%" src="https://picsum.photos/800/600?random=3" />
-              <p>Lol</p>
-            </Carousel.Item>
-           
-          </Carousel>
-
-
-        */

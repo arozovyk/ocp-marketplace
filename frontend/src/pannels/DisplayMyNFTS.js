@@ -2,7 +2,7 @@ import React from "react";
 import { Panel } from "rsuite";
 import Carousel from "react-grid-carousel";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { createMarketItem, getSelectedAccount } from "./Web3Client";
+import { buyNft, getSelectedAccount } from "../Web3Client";
 
 const APIURL =
   "https://api.thegraph.com/subgraphs/name/arozovyk/nftmarketplace";
@@ -18,35 +18,26 @@ const tokensQuery = `
     }
   }
 `;
+
 const client = new ApolloClient({
   uri: APIURL,
   cache: new InMemoryCache(),
 });
-export class DiplayMyNFTS extends React.Component {
+
+export class DisplayMyNFTS extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      tokenOwner: null,
       marketItems: null,
-      marketGalery: null,
     };
   }
 
   componentDidMount() {
     this.itemsSetUp().then(() => {
-      let items = this.state.marketItems.map((nft) => {
-        let i = {
-          src: nft.image,
-          thumbnail: nft.image,
-          thumbnailWidth: 320,
-          thumbnailHeight: 212,
-          caption: "<p>" + nft.name + "</p><p>" + nft.description + "</p>",
-        };
-        return i;
+      client.query({
+        query: gql(tokensQuery),
       });
-      this.setState({ marketGalery: items });
-    });
-    client.query({
-      query: gql(tokensQuery),
     });
   }
 
@@ -67,8 +58,6 @@ export class DiplayMyNFTS extends React.Component {
     });
     let selectedAddr = await getSelectedAccount();
     var user = data2.data.users.filter((user) => {
-      console.log(user.id + "is id ");
-      console.log(selectedAddr + "is selected ");
       return user.id === selectedAddr;
     })[0];
     let userTokens = user === undefined ? [] : user.tokens;
@@ -103,33 +92,22 @@ export class DiplayMyNFTS extends React.Component {
   handleSubmit(event) {
     let id = event.target[0].value;
     let price = event.target[1].value;
-    createMarketItem(id, price);
+    buyNft(id, price);
     event.preventDefault();
   }
 
   render() {
-    const nfts = this.props.myNfts;
     return (
       <Panel header="My NFTs:" bordered>
         <div>
-          {nfts != null ? (
+          {this.state.marketItems != null ? (
             <Carousel cols={4} rows={1} gap={0} loop>
-              {nfts.map((nft, i) => (
+              {this.state.marketItems.map((nft, i) => (
                 <Carousel.Item key={i}>
                   <img src={nft.image} width="50%" alt="" />
                   <p>Name : {nft.name}</p>
                   <p>Description : {nft.description}</p>
                   <p>tokenId : {nft.tokenId}</p>
-                  <form onSubmit={this.handleSubmit}>
-                    <input type="hidden" name="tokenID" value={nft.tokenId} />
-                    <input
-                      type="number"
-                      step="0.1"
-                      name="price"
-                      value={nft.price}
-                    />
-                    <input type="submit" value="Sell" />
-                  </form>
                 </Carousel.Item>
               ))}
             </Carousel>
@@ -184,6 +162,8 @@ export class DiplayMyNFTS extends React.Component {
             </p>
           </div>
         )}
+
+
         <Carousel cols={2} rows={1} gap={10} loop>
             <Carousel.Item>
               <img width="100%" src="https://picsum.photos/800/600?random=1" />
@@ -195,5 +175,8 @@ export class DiplayMyNFTS extends React.Component {
               <img width="100%" src="https://picsum.photos/800/600?random=3" />
               <p>Lol</p>
             </Carousel.Item>
+           
           </Carousel>
+
+
         */

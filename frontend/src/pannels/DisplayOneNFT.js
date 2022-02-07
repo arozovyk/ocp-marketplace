@@ -1,8 +1,8 @@
 import React from "react";
 import { Panel } from "rsuite";
 import { Button } from "rsuite";
-
-import { getTokenUri, getOwnerOf } from "./Web3Client";
+import { getJsonAsync } from "../utils";
+import { getTokenUri, getOwnerOf } from "../Web3Client";
 
 export class DisplayOneNFT extends React.Component {
   constructor(props) {
@@ -25,20 +25,9 @@ export class DisplayOneNFT extends React.Component {
     });
   };
 
-  getJsonAsync(url) {
-    return fetch(url)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        return responseJson;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
   findByTokenId = (event) => {
     getTokenUri(this.state.tokenId).then((res) => {
-      this.getJsonAsync(res).then((jm) =>
+      getJsonAsync(res).then((jm) =>
         this.setState({
           tokenMetadata: JSON.stringify(jm),
           tokenUri: jm.image,
@@ -55,7 +44,7 @@ export class DisplayOneNFT extends React.Component {
 
   render() {
     return (
-      <Panel header="Display NFT by TokenId" bordered>
+      <Panel header="Display NFT by TokenId" bordered collapsible>
         <div>
           <form onSubmit={this.findByTokenId}>
             <p>

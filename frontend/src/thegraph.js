@@ -1,4 +1,8 @@
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+   gql,
+} from "@apollo/client";
 import { getJsonAsync } from "./utils";
 import { getSelectedAccount } from "./Web3Client";
 
@@ -16,9 +20,20 @@ const tokensQuery = `
     }
   }
 `;
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: "no-cache",
+    errorPolicy: "ignore",
+  },
+  query: {
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  },
+};
 const client = new ApolloClient({
   uri: APIURL,
   cache: new InMemoryCache(),
+  defaultOptions: defaultOptions,
 });
 
 export async function fetchNFTgraph() {

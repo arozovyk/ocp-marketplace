@@ -14,17 +14,6 @@ export class DisplayMyNFTS extends React.Component {
     };
   }
  
-  getJsonAsync(url) {
-    return fetch(url)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        return responseJson;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
- 
 
   handleInputChange = (event) => {
     //TODO export it from upstream to remove code duplication

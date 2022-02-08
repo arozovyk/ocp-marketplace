@@ -7,6 +7,7 @@ import { DisplayMyNFTS } from "./pannels/DisplayMyNFTS";
 import { fetchNFTgraph } from "./thegraph";
 import "rsuite/dist/rsuite.min.css";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { Collections } from "./collections";
 
 const styles = {
   padding: 20,
@@ -44,10 +45,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <div>
+          <Collections>x</Collections>
           <CountdownCircleTimer
             isPlaying
             size={100}
-            duration={3}
+            duration={322}
             colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
             colorsTime={[10, 6, 3, 0]}
             onComplete={() => {

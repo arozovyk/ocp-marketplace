@@ -62,6 +62,11 @@ export const getTokenUri = async (tokenId) => {
   return await nftContract.methods.tokenURI(tokenId).call();
 };
 
+export const getColTokenUri = async (collAddr, tokenId) => {
+  const collContract = new web3.eth.Contract(nft_abi.abi, collAddr);
+  return await collContract.methods.tokenURI(tokenId).call();
+};
+
 export const getOwnerOf = async (tokenId) => {
   return await nftContract.methods.ownerOf(tokenId).call();
 };

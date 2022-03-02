@@ -1,0 +1,5 @@
+(executable
+ (name api_server)
+ (modules api_server config api_services api_handlers api_data data_types utils controller)
+ (libraries ez_api.server yojson))
+ 

@@ -19,5 +19,4 @@ let f2 address =
       Seq.map (fun (k, s) -> (k, S.to_seq s)) (M.to_seq colls) |> Lwt.return
 
 let collections _ _ address =
-  let _ = address in
   f2 address >>= fun col -> EzAPIServerUtils.return @@ Ok col

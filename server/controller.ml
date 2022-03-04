@@ -8,14 +8,11 @@ let apply_transfer ~currentAddr transfer collections =
   let tokenID = get_member_string "tokenID" in
   let contractAddress = get_member_string "contractAddress" in
   let update_collections collections =
-    let eq a b =
-      String.equal (String.lowercase_ascii a) (String.lowercase_ascii b)
-    in
     let col = M.find contractAddress collections in
-    if eq currentAddr to_field then
+    if eq_lowercase currentAddr to_field then
       let col = S.add tokenID col in
       M.add contractAddress col collections
-    else if eq currentAddr from then
+    else if eq_lowercase currentAddr from then
       let col = S.remove tokenID col in
       if S.cardinal col = 0 then M.remove currentAddr collections
       else M.add contractAddress col collections
@@ -25,8 +22,6 @@ let apply_transfer ~currentAddr transfer collections =
     let collections = M.add contractAddress S.empty collections in
     update_collections collections
   else update_collections collections
-
-(*   in *)
 
 let aggregate_transactions currentAddr result =
   let collections = M.empty in

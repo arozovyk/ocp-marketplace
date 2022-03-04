@@ -12,6 +12,8 @@ let write_json json f =
   output_string chan str;
   close_out chan
 
+let eq_lowercase a b =
+  String.equal (String.lowercase_ascii a) (String.lowercase_ascii b)
 
 module S = Set.Make (String)
 module M = Map.Make (String)

@@ -1,5 +1,5 @@
 open Config
- 
+
 let fetch_nfts () =
   Cohttp_lwt_unix.Client.get (Uri.of_string snowtrace_url) |> Lwt_main.run
 
@@ -28,3 +28,13 @@ let test =
       { title = Some "title1"; events = [ "event1"; "event2" ] }
   in
   EzAPIServerUtils.return @@ Ok (Utils.write_json json "database.json")
+
+(*
+   let f () =
+     match fetch_nfts () with
+     | _, resp -> (
+         let str = Cohttp_lwt.Body.to_string resp |> Lwt_main.run in
+         match Yojson.Safe.from_string str with
+         | `Assoc [ _; ("message", `String "OK"); ("result", transaction_list) ] ->
+             Format.printf "%a" Yojson.Safe.pp transaction_list
+         | _ -> Format.eprintf "Error calling snowtrace") *)

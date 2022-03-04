@@ -1,4 +1,5 @@
 open Data_types
+
 let resp_encoding =
   Json_encoding.(
     conv
@@ -7,3 +8,5 @@ let resp_encoding =
       (obj2
          (req "events" (list Json_encoding.string))
          (opt "title" Json_encoding.string)))
+
+let collections_encoding = Json_encoding.(seq (tup2 string (seq string)))

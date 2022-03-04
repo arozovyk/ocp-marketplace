@@ -6,10 +6,10 @@ let unauthorized () = EzAPIServerUtils.return (Error "Error 403")
 let not_found s = EzAPIServerUtils.return (Error ("Error 404: " ^ s))
 let unknown_error s = EzAPIServerUtils.return (Error ("Error: " ^ s))
 let ok e = EzAPIServerUtils.return (Ok e)
-let fetch_nfts () = Cohttp_lwt_unix.Client.get (Uri.of_string snowtrace_url)
+let fetch_nfts address = Cohttp_lwt_unix.Client.get (Uri.of_string (snowtrace_url address))
 
-let f2 address =
-  fetch_nfts () >>= fun nfts_resp ->
+let get_collections address =
+  fetch_nfts  address >>= fun nfts_resp ->
   match nfts_resp with
   | _, resp ->
       resp |> Cohttp_lwt.Body.to_string >>= fun str ->
@@ -19,4 +19,4 @@ let f2 address =
       Seq.map (fun (k, s) -> (k, S.to_seq s)) (M.to_seq colls) |> Lwt.return
 
 let collections _ _ address =
-  f2 address >>= fun col -> EzAPIServerUtils.return @@ Ok col
+  get_collections address >>= fun col -> EzAPIServerUtils.return @@ Ok col

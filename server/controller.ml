@@ -14,7 +14,7 @@ let apply_transfer ~currentAddr transfer collections =
       M.add contractAddress col collections
     else if eq_lowercase currentAddr from then
       let col = S.remove tokenID col in
-      if S.cardinal col = 0 then M.remove currentAddr collections
+      if S.cardinal col = 0 then M.remove contractAddress collections
       else M.add contractAddress col collections
     else collections
   in

@@ -1,7 +1,7 @@
 open Utils
 open Yojson.Safe.Util
 
-let apply_transfer ~currentAddr transfer collections =
+let apply_transfer currentAddr transfer collections =
   let get_member_string key = member key transfer |> to_string in
   let from = get_member_string "from" in
   let to_field = get_member_string "to" in
@@ -26,4 +26,4 @@ let apply_transfer ~currentAddr transfer collections =
 let aggregate_transactions currentAddr result =
   let collections = M.empty in
   let res = filter_member "result" [ result ] |> flatten in
-  List.fold_left (fun mp x -> apply_transfer ~currentAddr x mp) collections res
+  List.fold_left (fun mp x -> apply_transfer currentAddr x mp) collections res
